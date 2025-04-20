@@ -1,6 +1,6 @@
-package com.paopeye.resttemplate.di
+package com.paopeye.devshowcase.di
 
-import com.paopeye.resttemplate.MainActivityViewModel
+import com.paopeye.devshowcase.MainActivityViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

@@ -1,4 +1,4 @@
-package com.paopeye.resttemplate
+package com.paopeye.devshowcase
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.paopeye.domain.model.User
-import com.paopeye.resttemplate.databinding.ActivityMainBinding
+import com.paopeye.devshowcase.databinding.ActivityMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {

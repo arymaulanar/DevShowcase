@@ -1,4 +1,4 @@
-package com.paopeye.resttemplate
+package com.paopeye.devshowcase
 
 import android.view.LayoutInflater
 import android.view.View

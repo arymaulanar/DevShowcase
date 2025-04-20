@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.paopeye.resttemplate"
+    namespace = libs.versions.applicationId.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
     flavorDimensions += libs.versions.flavorDimensions.get()
 

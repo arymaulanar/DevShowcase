@@ -1,4 +1,4 @@
-package com.paopeye.resttemplate
+package com.paopeye.devshowcase
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData

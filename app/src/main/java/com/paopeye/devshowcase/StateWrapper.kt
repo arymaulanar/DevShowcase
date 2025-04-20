@@ -1,4 +1,4 @@
-package com.paopeye.resttemplate
+package com.paopeye.devshowcase
 
 open class StateWrapper<out T>(private val content: T) {
 

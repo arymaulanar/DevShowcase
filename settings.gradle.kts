@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RestTemplate"
+rootProject.name = "DevShowcase"
 include(":app")
 include(":libraries")
 include(":libraries:cache")

@@ -1,4 +1,4 @@
-package com.paopeye.resttemplate.di
+package com.paopeye.devshowcase.di
 
 import com.paopeye.cache.di.cacheModule
 import com.paopeye.cache.di.sharedPrefsModule

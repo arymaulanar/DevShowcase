@@ -1,11 +1,11 @@
-package com.paopeye.resttemplate.base
+package com.paopeye.devshowcase.base
 
 import android.app.Application
-import com.paopeye.resttemplate.di.appModule
+import com.paopeye.devshowcase.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class RestApplication : Application() {
+class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
