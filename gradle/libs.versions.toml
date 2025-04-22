@@ -25,6 +25,7 @@ chucker = "4.0.0"
 androidxCrypto = "1.1.0-alpha06"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
+chipNavigationBar = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,7 @@ okhttp3-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconn
 chucker-library = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+navbar-chip = { module = "com.github.ismaeldivita:chip-navigation-bar", version.ref = "chipNavigationBar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

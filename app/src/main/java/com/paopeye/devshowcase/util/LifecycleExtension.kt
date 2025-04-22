@@ -1,4 +1,4 @@
-package com.paopeye.devshowcase
+package com.paopeye.devshowcase.util
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData

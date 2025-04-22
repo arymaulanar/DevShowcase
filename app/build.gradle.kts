@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.okhttp3.urlconnection)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.navbar.chip)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

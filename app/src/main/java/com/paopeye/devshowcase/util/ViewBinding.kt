@@ -1,4 +1,4 @@
-package com.paopeye.devshowcase
+package com.paopeye.devshowcase.util
 
 import android.view.LayoutInflater
 import android.view.View

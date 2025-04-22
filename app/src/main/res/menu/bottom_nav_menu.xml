@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_news_item"
+        android:title="@string/menu_news"
+        android:icon="@drawable/ic_news_black_24dp"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white"
+        app:cnb_backgroundColor="@color/black"
+        app:cnb_iconTintMode="src_in" />
+    <item
+        android:id="@+id/menu_weather_item"
+        android:title="@string/menu_weather"
+        android:icon="@drawable/ic_weather_black_24dp" />
+    <item
+        android:id="@+id/menu_profile_item"
+        android:title="@string/menu_profile"
+        android:icon="@drawable/ic_account_circle_black_24dp" />
+</menu>
