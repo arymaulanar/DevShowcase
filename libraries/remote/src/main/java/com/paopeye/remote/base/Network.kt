@@ -1,6 +1,7 @@
 package com.paopeye.remote.base
 
 import android.content.Context
+import android.util.Log
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.Gson
@@ -11,7 +12,7 @@ import com.paopeye.kit.util.Environment
 import com.paopeye.remote.adapter.BigDecimalWithOutScientificTypeAdapter
 import com.paopeye.remote.adapter.DoubleToBigDecimalTypeAdapter
 import com.paopeye.remote.base.constant.NetworkConfigs
-import com.paopeye.remote.base.interceptor.DynamicHostInterceptor
+import com.paopeye.remote.base.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,7 +23,6 @@ import java.util.concurrent.TimeUnit
 object Network {
     fun getOkHttpClient(
         context: Context,
-        isDynamicHost: Boolean,
         networkTimeout: Long = NetworkConfigs.TIMEOUT
     ): OkHttpClient {
         return OkHttpClient.Builder().apply {
@@ -31,10 +31,7 @@ object Network {
                 addInterceptor(getHttpLoggingInterceptor())
                 addInterceptor(getChuckInterceptor(context))
             }
-            if (isDynamicHost) {
-                addInterceptor(DynamicHostInterceptor())
-                return@apply
-            }
+            addInterceptor(AuthInterceptor())
             readTimeout(networkTimeout, TimeUnit.SECONDS)
             connectTimeout(networkTimeout, TimeUnit.SECONDS)
         }.build()

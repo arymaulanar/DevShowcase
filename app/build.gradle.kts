@@ -19,30 +19,30 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    productFlavors {
-        create("dev") {
-            applicationId = libs.versions.applicationIdDev.get()
-            dimension = "default"
-            buildConfigField("Long", "NETWORK_TIMEOUT", "90L")
-            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-            )
-        }
-        create("prod") {
-            applicationId = libs.versions.applicationIdProduction.get()
-            dimension = libs.versions.flavorDimensions.get()
-            buildConfigField("Long", "NETWORK_TIMEOUT", "60L")
-            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-            )
-        }
-    }
+//    productFlavors {
+//        create("dev") {
+//            applicationId = libs.versions.applicationIdDev.get()
+//            dimension = "default"
+//            buildConfigField("Long", "NETWORK_TIMEOUT", "90L")
+//            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
+//            buildConfigField(
+//                "String",
+//                "BASE_URL",
+//                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
+//            )
+//        }
+//        create("prod") {
+//            applicationId = libs.versions.applicationIdProduction.get()
+//            dimension = libs.versions.flavorDimensions.get()
+//            buildConfigField("Long", "NETWORK_TIMEOUT", "60L")
+//            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
+//            buildConfigField(
+//                "String",
+//                "BASE_URL",
+//                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
+//            )
+//        }
+//    }
 
     buildTypes {
         release {

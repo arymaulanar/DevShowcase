@@ -9,34 +9,6 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     flavorDimensions += libs.versions.flavorDimensions.get()
 
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-        multiDexEnabled = true
-    }
-
-    productFlavors {
-        create("dev") {
-            dimension = "default"
-            buildConfigField("Long", "NETWORK_TIMEOUT", "90L")
-            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-            )
-        }
-        create("prod") {
-            dimension = "default"
-            buildConfigField("Long", "NETWORK_TIMEOUT", "60L")
-            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-            )
-        }
-    }
-
     buildTypes {
         debug {
             isMinifyEnabled = false
@@ -49,18 +21,11 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
     kotlinOptions {
         jvmTarget = "11"
     }
     buildFeatures {
         buildConfig = true
-    }
-    viewBinding {
-        enable = true
     }
 }
 

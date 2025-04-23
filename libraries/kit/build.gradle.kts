@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -10,30 +12,20 @@ android {
     flavorDimensions += libs.versions.flavorDimensions.get()
 
     defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-        multiDexEnabled = true
-    }
-
-    productFlavors {
-        create("dev") {
-            dimension = "default"
-            buildConfigField("Long", "NETWORK_TIMEOUT", "90L")
-            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-            )
-        }
-        create("prod") {
-            dimension = "default"
-            buildConfigField("Long", "NETWORK_TIMEOUT", "60L")
-            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-            )
+        val newsApiKey = gradleLocalProperties(rootDir, providers).getProperty("NEWS_API_KEY") ?: ""
+        val weatherApiKey =
+            gradleLocalProperties(rootDir, providers).getProperty("WEATHER_API_KEY") ?: ""
+        val keys = mapOf(
+            "WEATHER_API_KEY" to weatherApiKey,
+            "NEWS_API_KEY" to newsApiKey
+        )
+        externalNativeBuild {
+            cmake {
+                cppFlags += ""
+                keys.forEach { (key, value) ->
+                    arguments("-D${key}=${value}")
+                }
+            }
         }
     }
 
@@ -49,23 +41,22 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
     kotlinOptions {
         jvmTarget = "11"
     }
     buildFeatures {
         buildConfig = true
     }
-    viewBinding {
-        enable = true
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
+    ndkVersion = "25.1.8937393"
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.security.crypto)

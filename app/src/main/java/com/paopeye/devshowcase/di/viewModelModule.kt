@@ -1,9 +1,9 @@
 package com.paopeye.devshowcase.di
 
-import com.paopeye.devshowcase.MainActivityViewModel
+import com.paopeye.devshowcase.ui.news.NewsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { MainActivityViewModel(get()) }
+    viewModel { NewsViewModel(get()) }
 }
