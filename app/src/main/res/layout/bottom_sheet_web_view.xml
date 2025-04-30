@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/an_primary"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/divider_view"
+        android:layout_width="@dimen/spacing_extra_large"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:padding="@dimen/spacing_small"/>
+
+    <com.paopeye.devshowcase.component.web_view.CustomWebView
+        android:id="@+id/web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/spacing_medium" />
+
+</LinearLayout>

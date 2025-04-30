@@ -19,6 +19,6 @@ internal class AuthInterceptor : Interceptor {
         if (isWeatherConfig) {
             //TODO
         }
-        return chain.proceed(newRequestBuilder.build())
+        return chain.proceed(newRequestBuilder.removeHeader(NetworkConfigs.CUSTOM_HEADERS).build())
     }
 }

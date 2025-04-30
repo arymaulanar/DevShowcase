@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common spacing -->
+    <dimen name="spacing_none">0dp</dimen>
+    <dimen name="spacing_extra_small">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_extra_large">32dp</dimen>
+
+    <!-- ImageView -->
+    <dimen name="image_height_extra_large">320dp</dimen>
+
+    <!-- Button -->
+    <dimen name="button_height">48dp</dimen>
+
+    <!-- Toolbar dimensions -->
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="toolbar_icon_size">24dp</dimen>
+    <dimen name="toolbar_margin_horizontal">16dp</dimen>
+
+    <!-- Chip navigation dimensions -->
+    <dimen name="chip_nav_height">48dp</dimen>
+    <dimen name="chip_nav_padding">8dp</dimen>
+    <dimen name="chip_min_width">80dp</dimen>
+    <dimen name="chip_icon_size">24dp</dimen>
+    <dimen name="chip_text_size">12sp</dimen>
+
+    <!-- Fragment container -->
+    <dimen name="fragment_padding">16dp</dimen>
+
+    <!-- Common icon sizes -->
+    <dimen name="icon_small">16dp</dimen>
+    <dimen name="icon_medium">24dp</dimen>
+    <dimen name="icon_large">32dp</dimen>
+    <dimen name="icon_extra_large">48dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_medium">14sp</dimen>
+    <dimen name="text_large">18sp</dimen>
+    <dimen name="text_extra_large">24sp</dimen>
+    <dimen name="text_title">20sp</dimen>
+
+    <!-- Corner radius -->
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+    <dimen name="corner_radius_full">50dp</dimen>
+
+    <!-- Elevation -->
+    <dimen name="elevation_low">2dp</dimen>
+    <dimen name="elevation_medium">6dp</dimen>
+    <dimen name="elevation_high">12dp</dimen>
+</resources>

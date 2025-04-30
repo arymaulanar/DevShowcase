@@ -3,4 +3,8 @@
     <string name="menu_news">News</string>
     <string name="menu_weather">Weather</string>
     <string name="menu_profile">Profile</string>
+
+    <string name="back_button">Back Button</string>
+
+    <string name="read_more">Read more</string>
 </resources>

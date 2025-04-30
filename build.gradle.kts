@@ -11,12 +11,12 @@ fun com.android.build.api.dsl.ProductFlavor.applyDevConfig() {
     buildConfigField(
         "String",
         "BASE_NEWS_URL",
-        "\"https://api.finlight.me/\""
+        "\"https://private-a02d60-devshowcase.apiary-mock.com/\""
     )
     buildConfigField(
         "String",
         "BASE_WEATHER_URL",
-        "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
+        "\"https://private-a02d60-devshowcase.apiary-mock.com/\""
     )
 }
 
@@ -39,8 +39,14 @@ subprojects {
     plugins.withId("com.android.application") {
         configure<com.android.build.gradle.BaseExtension> {
             productFlavors {
-                create("dev") { applyDevConfig() }
-                create("prod") { applyProdConfig() }
+                create("dev") {
+                    applicationId = libs.versions.applicationIdDev.get()
+                    applyDevConfig()
+                }
+                create("prod") {
+                    applicationId = libs.versions.applicationIdProduction.get()
+                    applyProdConfig()
+                }
             }
         }
     }

@@ -19,31 +19,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-//    productFlavors {
-//        create("dev") {
-//            applicationId = libs.versions.applicationIdDev.get()
-//            dimension = "default"
-//            buildConfigField("Long", "NETWORK_TIMEOUT", "90L")
-//            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
-//            buildConfigField(
-//                "String",
-//                "BASE_URL",
-//                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-//            )
-//        }
-//        create("prod") {
-//            applicationId = libs.versions.applicationIdProduction.get()
-//            dimension = libs.versions.flavorDimensions.get()
-//            buildConfigField("Long", "NETWORK_TIMEOUT", "60L")
-//            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
-//            buildConfigField(
-//                "String",
-//                "BASE_URL",
-//                "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
-//            )
-//        }
-//    }
-
     buildTypes {
         release {
             isShrinkResources = true
@@ -93,6 +68,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.navbar.chip)
+    implementation(libs.glide)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

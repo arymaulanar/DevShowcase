@@ -27,6 +27,7 @@ androidxCrypto = "1.1.0-alpha06"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 chipNavigationBar = "1.4.0"
+glide = "4.16.0"
 
 [libraries]
 android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -52,6 +53,7 @@ chucker-library = { group = "com.github.chuckerteam.chucker", name = "library", 
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 navbar-chip = { module = "com.github.ismaeldivita:chip-navigation-bar", version.ref = "chipNavigationBar" }
+glide = { group = "com.github.bumptech.glide",name="glide", version.ref = "glide" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

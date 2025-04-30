@@ -8,4 +8,27 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="bottom_navigation">#242424</color>
+
+    <!-- Apple News-inspired Dark Theme Colors -->
+    <color name="an_primary">#FF000000</color>       <!-- Deep dark gray (primary surface) #1C1C1E -->
+    <color name="an_primary_variant">#1C1C1E</color>
+    <color name="an_primary_variant_2">#2C2C2E</color> <!-- Slightly lighter for cards -->
+    <color name="an_secondary">#0A84FF</color>     <!-- Apple's signature blue -->
+    <color name="an_secondary_variant">#5E5CE6</color> <!-- Purple accent -->
+
+    <!-- Text Colors -->
+    <color name="an_text_primary">#FFFFFF</color>   <!-- Pure white for main text -->
+    <color name="an_text_secondary">#A8A8A8</color> <!-- Slightly off-white (60% opacity) -->
+    <color name="an_text_tertiary">#757575</color> <!-- 30% opacity in Apple -->
+    <color name="an_text_placeholder">#3A3A3C</color>
+
+    <!-- System Colors -->
+    <color name="an_system_red">#FF453A</color>
+    <color name="an_system_orange">#FF9F0A</color>
+    <color name="an_system_green">#3BD346</color>
+
+    <!-- Special Backgrounds -->
+    <color name="an_sheet_background">#232324</color> <!-- Bottom sheet bg -->
+    <color name="an_card_background">#242426</color>  <!-- Card bg -->
+    <color name="an_highlight">#3A3A3C</color>       <!-- Pressed state -->
 </resources>
