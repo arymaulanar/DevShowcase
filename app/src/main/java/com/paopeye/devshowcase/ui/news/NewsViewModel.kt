@@ -31,6 +31,8 @@ class NewsViewModel(
         _state.value = StateWrapper(state)
     }
 
+    private var _articles : Articles? = null
+
     fun onEvent(event: Event) {
         when (event) {
             is Event.OnCreate -> onLoadArticles()
@@ -38,11 +40,13 @@ class NewsViewModel(
     }
 
     private fun onLoadArticles() = launch {
+        if (_articles != null) return@launch
         setState(State.ShowLoading)
         val result = getArticlesUseCase.invoke()
         setState(State.HideLoading)
         if (result is DataState.ERROR) return@launch
         val articles = result.data
+        _articles = articles
         setState(State.ShowArticles(articles?.articles.orEmpty()))
     }
 }

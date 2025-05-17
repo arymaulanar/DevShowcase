@@ -2,30 +2,35 @@ package com.paopeye.devshowcase.ui.news
 
 import android.animation.ArgbEvaluator
 import android.graphics.Color
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.paopeye.devshowcase.MainActivity
 import com.paopeye.devshowcase.R
 import com.paopeye.devshowcase.base.BaseFragment
 import com.paopeye.devshowcase.databinding.FragmentNewsBinding
 import com.paopeye.devshowcase.ui.news_detail.NewsDetailFragment
 import com.paopeye.devshowcase.util.subscribeSingleState
-import com.paopeye.devshowcase.util.viewBinding
 import com.paopeye.domain.model.Article
+import com.paopeye.kit.extension.emptyInt
 import com.paopeye.kit.extension.emptyString
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewsFragment : BaseFragment() {
+class NewsFragment : BaseFragment<FragmentNewsBinding>() {
     private val viewModel: NewsViewModel by viewModel()
-    private val binding by viewBinding(FragmentNewsBinding::bind)
-    override fun getLayoutRes() = R.layout.fragment_news
     override fun isUseToolbar() = true
+    override fun isUseLeftImageToolbar() = false
     override fun toolbarTitle() = emptyString()
-
     private val newsAdapter = NewsAdapter()
 
-    override fun setupView(view: View) {
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentNewsBinding {
+        return FragmentNewsBinding.inflate(inflater, container, false)
+    }
+
+    override fun setupView() {
         setupScrollView()
         setupRecyclerView()
         viewModel.onEvent(NewsViewModel.Event.OnCreate)
@@ -60,7 +65,7 @@ class NewsFragment : BaseFragment() {
             endColor
         ) as Int
         if (scrollRatio == 1f) title = getString(R.string.menu_news)
-        updateToolbar(title, false, toolbarColor)
+        updateToolbar(title, false, toolbarColor, toolbarColor)
     }
 
     private fun setupRecyclerView() {
@@ -69,7 +74,7 @@ class NewsFragment : BaseFragment() {
             adapter = newsAdapter
         }
         newsAdapter.setOnClickListener {
-            (activity as MainActivity).replaceFragment(NewsDetailFragment.newInstance(it))
+            replaceFragment(NewsDetailFragment.newInstance(it))
         }
     }
 

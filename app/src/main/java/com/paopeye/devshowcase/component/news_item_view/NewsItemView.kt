@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.paopeye.devshowcase.databinding.NewsItemViewBinding
-import com.paopeye.devshowcase.util.loadImageWithUrl
+import com.paopeye.devshowcase.util.loadWithUrlFallback
 import com.paopeye.domain.model.Article
 
 class NewsItemView @JvmOverloads constructor(
@@ -24,8 +24,7 @@ class NewsItemView @JvmOverloads constructor(
         setAuthor(article.getSourceDomain())
         setTitle(article.title)
         setDate(article.getPublishDateFormatted())
-        if (article.images.isEmpty()) return
-        setImage(article.images.first())
+        setImage(article.images)
     }
 
     fun setAuthor(author: String) {
@@ -40,7 +39,7 @@ class NewsItemView @JvmOverloads constructor(
         binding.dateText.text = date
     }
 
-    fun setImage(imageUrl: String) {
-        binding.newsImage.loadImageWithUrl(context, imageUrl)
+    fun setImage(imageUrls: List<String>) {
+        binding.newsImage.loadWithUrlFallback(context, imageUrls)
     }
 }

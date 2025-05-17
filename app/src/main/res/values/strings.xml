@@ -5,6 +5,10 @@
     <string name="menu_profile">Profile</string>
 
     <string name="back_button">Back Button</string>
-
     <string name="read_more">Read more</string>
+    <string name="search_city">Search City</string>
+    <string name="no_saved_weathers">No Saved Weathers</string>
+    <string name="temp">%1$s°</string>
+    <string name="minTemp">Min: %1$s°</string>
+    <string name="maxTemp">Max: %1$s°</string>
 </resources>

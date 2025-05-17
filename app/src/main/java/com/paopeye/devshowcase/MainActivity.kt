@@ -5,6 +5,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -19,7 +20,7 @@ import com.paopeye.devshowcase.util.viewBinding
 import com.paopeye.kit.extension.emptyInt
 import java.util.UUID
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ToolbarListener {
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val newsFragment by lazy { NewsFragment.newInstance() }
     private val weatherFragment by lazy { WeatherFragment.newInstance() }
@@ -34,35 +35,52 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(
             this
         ) {
-            if (supportFragmentManager.backStackEntryCount > emptyInt()) {
-                supportFragmentManager.popBackStack()
-                binding.bottomNav.visibility = VISIBLE
+            val backstackEntryCount = supportFragmentManager.backStackEntryCount
+            if (backstackEntryCount == emptyInt()) {
+                finish()
                 return@addCallback
             }
-            finish()
+            supportFragmentManager.popBackStack()
+            if (backstackEntryCount == 1) {
+                binding.bottomNav.visibility = VISIBLE
+                binding.customToolbarView.leftImageVisibility(false)
+            }
+
         }
     }
 
-    fun updateToolbar(title: String, isLeftImageVisible: Boolean, backgroundColor: Int?) {
+    override fun setVisibilityToolbar(isVisible: Boolean) {
+        binding.customToolbarView.isVisible = isVisible
+    }
+
+    override fun setTitleToolbar(title: String) {
         binding.customToolbarView.title = title
-        binding.customToolbarView.leftImageVisibility(isLeftImageVisible)
+    }
+
+    override fun setVisibilityLeftImageButton(isVisible: Boolean) {
+        binding.customToolbarView.leftImageVisibility(isVisible)
+    }
+
+    override fun setResourceLeftImageButton(@DrawableRes resource: Int?) {
+        if (resource == null) return
+        binding.customToolbarView.setResourceLeftImage(resource)
+    }
+
+    override fun setListenerLeftImageButton(action: () -> Unit) {
+        binding.customToolbarView.setClickListenerLeftImage(action)
+    }
+
+    override fun setBackgroundStatusBar(backgroundColor: Int?) {
         if (backgroundColor == null) return
-        binding.customToolbarView.changeBackgroundColor(backgroundColor)
         window.statusBarColor = backgroundColor
     }
 
-    fun setupToolbar(
-        title: String,
-        onClickLeftImage: (() -> Unit)?
-    ) {
-        binding.customToolbarView.title = title
-        if (onClickLeftImage != null) {
-            binding.customToolbarView.setupLeftImage(onClickLeftImage)
-        }
+    override fun setBackgroundToolbar(backgroundColor: Int?) {
+        if (backgroundColor == null) return
+        binding.customToolbarView.changeBackgroundColor(backgroundColor)
     }
 
     fun loadingVisibility(isVisible: Boolean) {
-        binding.loadingLayout.bringToFront()
         binding.loadingLayout.isVisible = isVisible
     }
 
@@ -107,6 +125,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment, tag: String) = with(binding) {
+        binding.fragmentContainer.isVisible = false
         bottomNav.isClickable = false
         val transaction = supportFragmentManager.beginTransaction()
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
@@ -115,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         nextFragment?.let { transaction.attach(it) }
         if (nextFragment == null) transaction.add(R.id.fragment_container, fragment, tag)
         transaction.commit()
-
+        binding.fragmentContainer.isVisible = true
         bottomNav.isClickable = true
     }
 
@@ -125,4 +144,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+}
+
+interface ToolbarListener {
+    fun setVisibilityToolbar(isVisible: Boolean)
+    fun setTitleToolbar(title: String)
+    fun setVisibilityLeftImageButton(isVisible: Boolean)
+    fun setResourceLeftImageButton(@DrawableRes resource: Int?)
+    fun setListenerLeftImageButton(action: () -> Unit)
+    fun setBackgroundToolbar(backgroundColor: Int?)
+    fun setBackgroundStatusBar(backgroundColor: Int?)
 }

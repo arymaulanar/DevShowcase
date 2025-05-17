@@ -31,4 +31,8 @@
     <color name="an_sheet_background">#232324</color> <!-- Bottom sheet bg -->
     <color name="an_card_background">#242426</color>  <!-- Card bg -->
     <color name="an_highlight">#3A3A3C</color>       <!-- Pressed state -->
+
+    <color name="search_bar_dark">#1AFFFFFF</color>
+    <color name="search_text_dark">#FFFFFF</color>
+    <color name="search_hint_dark">#80FFFFFF</color>
 </resources>

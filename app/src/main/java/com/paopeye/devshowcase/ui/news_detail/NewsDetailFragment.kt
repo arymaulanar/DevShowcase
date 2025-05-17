@@ -1,6 +1,7 @@
 package com.paopeye.devshowcase.ui.news_detail
 
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.bundle.bundleOf
 import androidx.core.content.ContextCompat
 import com.paopeye.devshowcase.R
@@ -9,28 +10,30 @@ import com.paopeye.devshowcase.component.bottom_sheet_web_view.BottomSheetWebVie
 import com.paopeye.devshowcase.databinding.FragmentNewsDetailBinding
 import com.paopeye.devshowcase.util.loadImageWithUrl
 import com.paopeye.devshowcase.util.subscribeSingleState
-import com.paopeye.devshowcase.util.viewBinding
 import com.paopeye.domain.model.Article
 import com.paopeye.kit.extension.parcelable
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewsDetailFragment : BaseFragment() {
+class NewsDetailFragment : BaseFragment<FragmentNewsDetailBinding>() {
     private val viewModel: NewsDetailViewModel by viewModel()
-    private val binding by viewBinding(FragmentNewsDetailBinding::bind)
-    override fun getLayoutRes() = R.layout.fragment_news_detail
     override fun isUseToolbar() = true
+    override fun isUseLeftImageToolbar() = true
     override fun toolbarTitle() = article.getPublishDateFormatted()
-    override fun toolbarLeftClickListener(): (() -> Unit)? = {
-        activity?.onBackPressed()
-    }
 
     private val article by lazy {
         arguments?.parcelable(ARTICLE_KEY, Article::class.java) ?: Article()
     }
 
-    override fun setupView(view: View) {
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentNewsDetailBinding {
+        return FragmentNewsDetailBinding.inflate(inflater, container, false)
+    }
+
+    override fun setupView() {
         val color = ContextCompat.getColor(requireContext(), R.color.an_primary)
-        updateToolbar(article.getPublishDateFormatted(), true, color)
+        updateToolbar(article.getPublishDateFormatted(), true, color, color)
         viewModel.onEvent(NewsDetailViewModel.Event.OnCreate(article))
     }
 
@@ -43,9 +46,9 @@ class NewsDetailFragment : BaseFragment() {
     }
 
     private fun showArticle(article: Article) {
-        if (article.images.isNotEmpty()) binding.newsImage.loadImageWithUrl(
+        binding.newsImage.loadImageWithUrl(
             requireContext(),
-            article.images.first()
+            article.images.firstOrNull()
         )
         binding.newsTitleText.text = article.title
         binding.newsSummaryText.text = article.summary

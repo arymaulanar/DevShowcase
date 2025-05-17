@@ -2,6 +2,8 @@ package com.paopeye.remote.base.interceptor
 
 import com.paopeye.kit.extension.getNewsApiKey
 import com.paopeye.kit.extension.getNewsKey
+import com.paopeye.kit.extension.getWeatherApiKey
+import com.paopeye.kit.extension.getWeatherKey
 import com.paopeye.remote.base.constant.NetworkConfigs
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -17,7 +19,7 @@ internal class AuthInterceptor : Interceptor {
             newRequestBuilder.header(getNewsKey(), getNewsApiKey())
         }
         if (isWeatherConfig) {
-            //TODO
+            newRequestBuilder.header(getWeatherKey(), getWeatherApiKey())
         }
         return chain.proceed(newRequestBuilder.removeHeader(NetworkConfigs.CUSTOM_HEADERS).build())
     }

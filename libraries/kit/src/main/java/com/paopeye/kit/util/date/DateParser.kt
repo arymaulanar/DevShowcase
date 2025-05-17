@@ -3,6 +3,7 @@ package com.paopeye.kit.util.date
 import com.paopeye.kit.extension.emptyString
 import com.paopeye.kit.extension.silence
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 object DateParser {
@@ -16,5 +17,14 @@ object DateParser {
             convertedDate?.let { formattedDate = expectedSimpleDateFormat.format(it) }
         }
         return formattedDate
+    }
+
+    fun getCurrentTime(): String {
+        return SimpleDateFormat(DateFormat.TIME, Locale.getDefault())
+            .format(Date(System.currentTimeMillis()))
+    }
+
+    fun getTimestampInSecond(): Long {
+        return System.currentTimeMillis() / 1000
     }
 }

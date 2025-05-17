@@ -21,3 +21,10 @@ Java_com_paopeye_kit_constant_SecureKeys_getNewsKey(JNIEnv *env, jobject thiz) {
     std::string newsKey = "X-API-KEY";
     return env->NewStringUTF(newsKey.c_str());
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_paopeye_kit_constant_SecureKeys_getWeatherKey(JNIEnv *env, jobject thiz) {
+    std::string newsKey = "X-Api-Key";
+    return env->NewStringUTF(newsKey.c_str());
+}

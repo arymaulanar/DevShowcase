@@ -51,7 +51,6 @@ internal class DataStateBoundResource<ENTITY : ToModelMapper<MODEL>, MODEL> priv
             dataState = createDataStateError(code = errorCode.toString())
             checkServerError(code)?.let { return it }
         } catch (throwable: Throwable) {
-            Log.d("TAG", "safeNetworkCall: "+ throwable)
             dataState = createDataStateError(code = emptyIndex().toString())
         }
         return dataState
@@ -123,19 +122,6 @@ internal class DataStateBoundResource<ENTITY : ToModelMapper<MODEL>, MODEL> priv
         return null
     }
 
-//    private suspend fun checkUnauthorized(code: Int): DataState<MODEL>? {
-//        val isUnauthorizedCode = code == UNAUTHORIZED_CODE
-//        if (isUnauthorizedCode &&
-//            isRetryUnauthorizedError &&
-//            retryUnauthorizedCount < MAX_RETRY
-//        ) {
-//            delay(DELAY_IN_MILLIS)
-//            retryUnauthorizedCount++
-//            return oauthTokenCall()
-//        }
-//        return null
-//    }
-
     companion object {
         private const val SOCKET_TIMEOUT = "SOCKET_TIMEOUT"
         private const val NO_INTERNET_CONNECTION = "NO_INTERNET_CONNECTION"
@@ -145,12 +131,10 @@ internal class DataStateBoundResource<ENTITY : ToModelMapper<MODEL>, MODEL> priv
         private val SERVER_ERROR_CODES = 500..599
 
         fun <ENTITY : ToModelMapper<MODEL>, MODEL> createNetworkCall(
-//            isRetryUnauthorizedError: Boolean = true,
             isRetryServerError: Boolean = false,
             updateCache: ((ENTITY?) -> Unit)? = null,
             networkCall: (suspend () -> ResponseEntity<ENTITY>?)
         ): DataStateBoundResource<ENTITY, MODEL> = DataStateBoundResource(
-//            isRetryUnauthorizedError,
             isRetryServerError,
             networkCall = networkCall,
             updateCache = updateCache

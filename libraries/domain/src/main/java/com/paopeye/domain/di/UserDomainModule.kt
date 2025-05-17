@@ -4,7 +4,7 @@ import com.paopeye.domain.usecase.news.GetArticlesUseCase
 import com.paopeye.domain.usecase.user.GetUserUseCase
 import org.koin.dsl.module
 
-internal val userDomainModule = module {
+internal val newsDomainModule = module {
     factory { GetUserUseCase(get()) }
     factory { GetArticlesUseCase(get()) }
 }

@@ -3,6 +3,7 @@ package com.paopeye.devshowcase.component.custom_toolbar_view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -33,11 +34,13 @@ class CustomToolbarView @JvmOverloads constructor(
         binding.leftImage.isVisible = isVisible
     }
 
-    fun setupLeftImage(
+    fun setResourceLeftImage(@DrawableRes resource: Int = R.drawable.ic_back_arrow_24dp) {
+        binding.leftImage.setImageResource(resource)
+    }
+
+    fun setClickListenerLeftImage(
         onClickListener: () -> Unit
     ) {
-        binding.leftImage.setImageResource(R.drawable.ic_back_arrow_24)
-        leftImageVisibility(true)
         binding.leftImage.setOnClickListener {
             onClickListener()
         }

@@ -11,8 +11,13 @@
     <!-- ImageView -->
     <dimen name="image_height_extra_large">320dp</dimen>
 
+    <!-- Weather Card List -->
+    <dimen name="weather_card_height">120dp</dimen>
+    <dimen name="weather_card_half_height">48dp</dimen>
+
     <!-- Button -->
     <dimen name="button_height">48dp</dimen>
+    <dimen name="searchbar_height">48dp</dimen>
 
     <!-- Toolbar dimensions -->
     <dimen name="toolbar_height">56dp</dimen>
@@ -41,11 +46,13 @@
     <dimen name="text_medium">14sp</dimen>
     <dimen name="text_large">18sp</dimen>
     <dimen name="text_extra_large">24sp</dimen>
+    <dimen name="text_extra_extra_large">32sp</dimen>
     <dimen name="text_title">20sp</dimen>
 
     <!-- Corner radius -->
     <dimen name="corner_radius_small">4dp</dimen>
     <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_medium_small">10dp</dimen>
     <dimen name="corner_radius_large">16dp</dimen>
     <dimen name="corner_radius_full">50dp</dimen>
 

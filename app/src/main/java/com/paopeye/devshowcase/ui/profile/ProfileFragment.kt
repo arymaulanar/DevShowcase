@@ -1,23 +1,32 @@
 package com.paopeye.devshowcase.ui.profile
 
-import android.view.View
-import com.paopeye.devshowcase.R
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.paopeye.devshowcase.base.BaseFragment
+import com.paopeye.devshowcase.databinding.FragmentProfileBinding
 
-class ProfileFragment : BaseFragment() {
+class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     companion object {
         fun newInstance(): ProfileFragment {
             return ProfileFragment()
         }
     }
 
-    override fun setupView(view: View) {
+    override fun setupView() {
 
     }
 
     override fun isUseToolbar() = false
-    override fun getLayoutRes() = R.layout.fragment_weather
+    override fun isUseLeftImageToolbar() = false
+
     override fun subscribeState() {
 
+    }
+
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentProfileBinding {
+        return FragmentProfileBinding.inflate(inflater, container, false)
     }
 }

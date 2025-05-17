@@ -32,7 +32,7 @@ fun com.android.build.api.dsl.ProductFlavor.applyProdConfig() {
     buildConfigField(
         "String",
         "BASE_WEATHER_URL",
-        "\"https://private-46cd3-arymaulanar.apiary-mock.com/\""
+        "\"https://api.api-ninjas.com/\""
     )
 }
 subprojects {
