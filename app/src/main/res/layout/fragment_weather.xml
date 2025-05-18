@@ -25,15 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.paopeye.devshowcase.component.search_bar_view.SearchBarView
-            android:id="@+id/search_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_city"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            app:layout_constraintTop_toBottomOf="@id/weather_title_text" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/weather_recycler_view"
             android:layout_width="match_parent"
@@ -52,6 +43,13 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_edit" />
+
+        <com.paopeye.devshowcase.component.search_auto_complete_view.SearchAutoCompleteView
+            android:id="@+id/search_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/weather_title_text" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

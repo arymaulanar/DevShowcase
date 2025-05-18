@@ -1,6 +1,5 @@
 package com.paopeye.data.datasource
 
-import android.util.Log
 import com.paopeye.data.entity.ResponseEntity
 import com.paopeye.data.entity.ResponseEntity.Companion.SUCCESS_RESPONSE_CODE
 import com.paopeye.data.mapper.ToModelMapper

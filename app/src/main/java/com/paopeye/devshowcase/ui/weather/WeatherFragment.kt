@@ -2,14 +2,18 @@ package com.paopeye.devshowcase.ui.weather
 
 import android.Manifest
 import android.animation.ArgbEvaluator
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -23,6 +27,7 @@ import com.paopeye.devshowcase.databinding.FragmentWeatherBinding
 import com.paopeye.devshowcase.util.LocationUtils.checkLocationEnabled
 import com.paopeye.devshowcase.util.LocationUtils.showLocationDisabledAlert
 import com.paopeye.devshowcase.util.subscribeSingleState
+import com.paopeye.domain.model.CityAutoComplete
 import com.paopeye.domain.model.Weather
 import com.paopeye.kit.extension.emptyString
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,6 +37,14 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
     override fun isUseToolbar() = false
     override fun isUseLeftImageToolbar() = false
     private val weathersAdapter = WeathersAdapter()
+    private val permissionsLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val granted = permissions.entries.all {
+                it.value
+            }
+            if (granted) showPermission()
+        }
+
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     override fun inflateBinding(
@@ -41,13 +54,10 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
         return FragmentWeatherBinding.inflate(inflater, container, false)
     }
 
-    private val permissionsLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val granted = permissions.entries.all {
-                it.value
-            }
-            if (granted) showPermission()
-        }
+    override fun onDetach() {
+        super.onDetach()
+        binding.searchEdit.detachTextWatcher()
+    }
 
     override fun setupView() {
         fusedLocationProviderClient =
@@ -56,6 +66,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
         setupSearchBar()
         setupScrollView()
         setupRecyclerView()
+        setupFocusClearing()
         viewModel.onEvent(WeatherViewModel.Event.OnCreate)
     }
 
@@ -65,14 +76,19 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
                 WeatherViewModel.State.HideLoading -> hideLoading()
                 WeatherViewModel.State.ShowLoading -> showLoading()
                 is WeatherViewModel.State.ShowWeathers -> showWeathers(it.weathers)
+                is WeatherViewModel.State.ShowLoadingSearchBar -> showLoadingSearchBar(it.isLoading)
+                is WeatherViewModel.State.ShowCityAutoCompletes -> showCityAutoCompletes(it.cities)
                 WeatherViewModel.State.ShowEmptyWeathers -> showEmptyWeathers()
             }
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        binding.searchEdit.detachTextChangedListener()
+    private fun showCityAutoCompletes(cities: List<CityAutoComplete>) {
+        binding.searchEdit.setAutoCompleteData(cities)
+    }
+
+    private fun showLoadingSearchBar(isLoading: Boolean) {
+        binding.searchEdit.setLoading(isLoading)
     }
 
     private fun showPermission() {
@@ -91,7 +107,8 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
         val isLocationEnabled = checkLocationEnabled(requireContext())
         if (!isLocationEnabled) return showLocationDisabledAlert(requireContext())
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation ?: return
@@ -106,12 +123,38 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
     }
 
     private fun setupSearchBar() {
-        binding.searchEdit.setRootView(binding.contentLayout)
-        binding.weatherTitleText.doOnPreDraw {
-            binding.searchEdit.setHeightTopSearchBar(it.height)
-        }
         binding.searchEdit.setOnTextChangedListener {
             viewModel.onEvent(WeatherViewModel.Event.OnQuerySearchBar(it))
+        }
+        binding.searchEdit.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.weatherRecyclerView.visibility = View.GONE
+                binding.emptyWeatherText.visibility = View.GONE
+                return@setOnFocusChangeListener
+            }
+            if (weathersAdapter.weathers.isEmpty()) return@setOnFocusChangeListener showEmptyWeathers()
+            binding.weatherRecyclerView.visibility = View.VISIBLE
+            binding.emptyWeatherText.visibility = View.GONE
+        }
+        binding.searchEdit.setOnClickAutoComplete {
+
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupFocusClearing() {
+        val root = binding.contentLayout // or use binding.root if appropriate
+        root.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val focusedView = requireActivity().currentFocus
+                if (focusedView is EditText) {
+                    focusedView.clearFocus()
+                    val imm =
+                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(focusedView.windowToken, 0)
+                }
+            }
+            false
         }
     }
 

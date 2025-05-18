@@ -1,3 +1,3 @@
 package com.paopeye.domain.di
 
-val domainModule = newsDomainModule + weatherDomainModule
+val domainModule = newsDomainModule + weatherDomainModule + photonDomainModule

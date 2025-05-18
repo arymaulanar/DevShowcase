@@ -1,6 +1,8 @@
 package com.paopeye.devshowcase
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.activity.addCallback
@@ -125,17 +127,18 @@ class MainActivity : AppCompatActivity(), ToolbarListener {
     }
 
     private fun loadFragment(fragment: Fragment, tag: String) = with(binding) {
-        binding.fragmentContainer.isVisible = false
-        bottomNav.isClickable = false
-        val transaction = supportFragmentManager.beginTransaction()
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        val nextFragment = supportFragmentManager.findFragmentByTag(tag)
-        currentFragment?.let { transaction.detach(it) }
-        nextFragment?.let { transaction.attach(it) }
-        if (nextFragment == null) transaction.add(R.id.fragment_container, fragment, tag)
-        transaction.commit()
-        binding.fragmentContainer.isVisible = true
-        bottomNav.isClickable = true
+        Handler(Looper.getMainLooper()).postDelayed({
+            bottomNav.isClickable = false
+            val transaction = supportFragmentManager.beginTransaction()
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            val nextFragment = supportFragmentManager.findFragmentByTag(tag)
+            currentFragment?.let { transaction.detach(it) }
+            nextFragment?.let { transaction.attach(it) }
+            if (nextFragment == null) transaction.add(R.id.fragment_container, fragment, tag)
+            transaction.setReorderingAllowed(true)
+            transaction.commit()
+            bottomNav.isClickable = true
+        }, 250)
     }
 
     private fun showInitialFragment() {

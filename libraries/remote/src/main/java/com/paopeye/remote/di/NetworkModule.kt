@@ -27,4 +27,11 @@ internal val networkModule = module {
             get()
         )
     }
+    single(named(NetworkNames.PHOTON)) {
+        Network.getRetrofit(
+            BuildConfig.BASE_PHOTON_URL,
+            get(),
+            get()
+        )
+    }
 }

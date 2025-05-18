@@ -18,6 +18,11 @@ fun com.android.build.api.dsl.ProductFlavor.applyDevConfig() {
         "BASE_WEATHER_URL",
         "\"https://private-a02d60-devshowcase.apiary-mock.com/\""
     )
+    buildConfigField(
+        "String",
+        "BASE_PHOTON_URL",
+        "\"https://photon.komoot.io/\""
+    )
 }
 
 fun com.android.build.api.dsl.ProductFlavor.applyProdConfig() {
@@ -33,6 +38,11 @@ fun com.android.build.api.dsl.ProductFlavor.applyProdConfig() {
         "String",
         "BASE_WEATHER_URL",
         "\"https://api.api-ninjas.com/\""
+    )
+    buildConfigField(
+        "String",
+        "BASE_PHOTON_URL",
+        "\"https://photon.komoot.io/\""
     )
 }
 subprojects {

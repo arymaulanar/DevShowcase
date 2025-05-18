@@ -1,188 +1,106 @@
 package com.paopeye.devshowcase.component.search_bar_view
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.MotionEvent
+import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.ListPopupWindow
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.paopeye.devshowcase.R
+import com.paopeye.devshowcase.databinding.SearchBarViewBinding
 import com.paopeye.devshowcase.util.DebounceTextWatcher
-import com.paopeye.devshowcase.util.dpToPx
-import com.paopeye.kit.extension.emptyFloat
-import com.paopeye.kit.extension.emptyInt
-import com.paopeye.kit.extension.orEmpty
+import com.paopeye.kit.extension.emptyString
 
-class SearchBarView : AppCompatEditText, View.OnTouchListener, View.OnFocusChangeListener {
+class SearchBarView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr), View.OnFocusChangeListener {
+    private var binding: SearchBarViewBinding
     private var textWatcher: DebounceTextWatcher? = null
-    private var clearButtonDrawable: Drawable? = null
-    private var searchIconDrawable: Drawable? = null
-    private var onFocusChangeListener: OnFocusChangeListener? = null
-    private var onTouchListener: OnTouchListener? = null
+    private var onDebounceTextChangedListener: (String) -> Unit? = {}
     private var onTextChangedListener: (String) -> Unit? = {}
-    private var autoCompleteAdapter: ArrayAdapter<String>? = null
-    private var autoCompletePopup: ListPopupWindow? = null
-    private var rootView: ViewGroup? = null
-    private var originalElevation: Float = emptyFloat()
-    private var aboveSearchBar: Int = emptyInt()
-    private var originalBackground: Drawable? = null
-    private var isExpanded = false
+    private var onFocusChangeListener: OnFocusChangeListener? = null
+    private var onClearIconClickListener: () -> Unit = {}
+    private var clearButtonDrawable: Drawable? = null
+    private var isLoading = false
 
-    constructor(context: Context) : super(context) {
-        init()
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    ) {
-        init()
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun init() {
-        background = ContextCompat.getDrawable(context, R.drawable.bg_search_edittext)
-        compoundDrawablePadding = (resources.displayMetrics.density * 8).toInt()
-        clearButtonDrawable = ContextCompat.getDrawable(context, R.drawable.ic_clear_24dp)
-        searchIconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_search_24dp)
-        originalElevation = elevation
-
-        setCompoundDrawablesWithIntrinsicBounds(
-            searchIconDrawable,
-            null,
-            null,
-            null
-        )
-        initAutoComplete()
-        super.setOnTouchListener(this)
-        super.setOnFocusChangeListener(this)
-        textWatcher = DebounceTextWatcher(
-            500L,
-            onDebouncedTextChanged = { onTextChangedListener(it) },
-            onTextChanged = {
-                setClearIconVisible(it.isNotEmpty())
-                updateAutoCompleteVisibility(it)
-            }
-        )
-        addTextChangedListener(textWatcher)
-    }
-
-    private fun initAutoComplete() {
-        autoCompleteAdapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_dropdown_item_1line,
-            mutableListOf()
-        )
-
-        autoCompletePopup = ListPopupWindow(context).apply {
-            anchorView = this@SearchBarView
-            setAdapter(autoCompleteAdapter)
-            setBackgroundDrawable(ColorDrawable(Color.WHITE))
-            setOnItemClickListener { parent, view, position, id ->
-                val selectedItem = autoCompleteAdapter?.getItem(position)
-                selectedItem?.let {
-                    setText(it)
-                    setSelection(it.length)
-                }
-            }
+    var query: String = emptyString()
+        set(value) {
+            field = value
+            binding.queryEdit.setText(field)
         }
+
+    init {
+        val inflater = LayoutInflater.from(context)
+        binding = SearchBarViewBinding.inflate(inflater, this, true)
+        initializeAttributes()
+        setupView()
     }
 
-    private fun updateAutoCompleteVisibility(text: CharSequence?) {
-        if (text.isNullOrEmpty()) {
-            autoCompletePopup?.dismiss()
-            dimBackground(false)
-        } else {
-            autoCompletePopup?.show()
-            dimBackground(true)
-        }
+    override fun requestFocus(direction: Int, previouslyFocusedRect: Rect?): Boolean {
+        return binding.queryEdit.requestFocus(direction, previouslyFocusedRect)
     }
 
-    private fun dimBackground(shouldDim: Boolean) {
-        rootView?.let {
-            if (shouldDim) {
-                it.background = ColorDrawable(Color.argb(150, 0, 0, 0))
-                it.setOnClickListener {
-                    clearFocus()
-                }
-            } else {
-                it.background = originalBackground
-                it.setOnClickListener(null)
-            }
-        }
-    }
-
-    private fun expand() {
-        if (isExpanded) return
-        isExpanded = true
-        elevation = dpToPx(8F)
-        val heightFloat = -aboveSearchBar.toFloat()
-        rootView?.animate()?.translationY(heightFloat)?.setDuration(300)?.start()
-        dimBackground(true)
-    }
-
-    private fun collapse() {
-        if (!isExpanded) return
-        isExpanded = false
+    override fun clearFocus() {
+        super.clearFocus()
+        binding.queryEdit.clearFocus()
         hideKeyboard()
-        elevation = originalElevation
-        rootView?.animate()?.translationY(0f)?.setDuration(300)?.start()
-        dimBackground(false)
-        autoCompletePopup?.dismiss()
-    }
-
-    private fun setClearIconVisible(visible: Boolean) {
-        val rightDrawable = if (visible) clearButtonDrawable else null
-        setCompoundDrawablesWithIntrinsicBounds(
-            searchIconDrawable,
-            null,
-            rightDrawable,
-            null
-        )
     }
 
     override fun setOnFocusChangeListener(onFocusChangeListener: OnFocusChangeListener) {
         this.onFocusChangeListener = onFocusChangeListener
     }
 
-    override fun setOnTouchListener(onTouchListener: OnTouchListener) {
-        this.onTouchListener = onTouchListener
-    }
-
     override fun onFocusChange(view: View, hasFocus: Boolean) {
-        if (hasFocus) {
-            expand()
-            setClearIconVisible(text?.isNotEmpty() == true)
-        } else {
-            collapse()
-            setClearIconVisible(false)
-        }
         onFocusChangeListener?.onFocusChange(view, hasFocus)
     }
 
-    override fun onTouch(view: View, event: MotionEvent): Boolean {
-        val x = event.x.toInt()
-        if (clearButtonDrawable != null && x > width - paddingRight - clearButtonDrawable?.intrinsicWidth.orEmpty()) {
-            if (event.action == MotionEvent.ACTION_UP) {
-                text = null
-                clearFocus()
-                return true
+    private fun initializeAttributes() {
+        clearButtonDrawable = ContextCompat.getDrawable(context, R.drawable.ic_clear_24dp)
+    }
+
+    private fun setupView() {
+        textWatcher = DebounceTextWatcher(
+            500L,
+            onDebouncedTextChanged = { onDebounceTextChangedListener(it) },
+            onTextChanged = {
+                updateRightImageState()
+                onTextChangedListener(it)
             }
+        )
+        binding.queryEdit.addTextChangedListener(textWatcher)
+        isFocusable = true
+        isFocusableInTouchMode = true
+        super.setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener?.onFocusChange(this, hasFocus)
         }
-        return onTouchListener?.onTouch(view, event) ?: false
+        binding.queryEdit.setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener?.onFocusChange(this, hasFocus)
+        }
+        binding.rightImage.setImageDrawable(clearButtonDrawable)
+        binding.rightImage.setOnClickListener {
+            binding.queryEdit.setText(emptyString())
+            onClearIconClickListener.invoke()
+        }
+    }
+
+    private fun updateRightImageState() {
+        if (isLoading) {
+            binding.rightImage.visibility = GONE
+            binding.loadingView.visibility = VISIBLE
+            return
+        }
+        if (binding.queryEdit.text.toString().isNotEmpty()) {
+            binding.rightImage.visibility = VISIBLE
+            binding.loadingView.visibility = GONE
+            return
+        }
+        binding.loadingView.visibility = GONE
+        binding.rightImage.visibility = GONE
     }
 
     private fun hideKeyboard() {
@@ -190,25 +108,24 @@ class SearchBarView : AppCompatEditText, View.OnTouchListener, View.OnFocusChang
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    fun setSuggestions(suggestions: List<String>) {
-        autoCompleteAdapter?.clear()
-        autoCompleteAdapter?.addAll(suggestions)
-    }
-
-    fun setRootView(root: ViewGroup) {
-        this.rootView = root
-        originalBackground = root.background
-    }
-
-    fun setHeightTopSearchBar(height: Int) {
-        aboveSearchBar = height
-    }
-
     fun setOnTextChangedListener(callback: (String) -> Unit) {
         onTextChangedListener = callback
     }
 
-    fun detachTextChangedListener() {
+    fun setOnDebounceTextChangedListener(callback: (String) -> Unit) {
+        onDebounceTextChangedListener = callback
+    }
+
+    fun setOnClearIconClickListener(callback: () -> Unit) {
+        onClearIconClickListener = callback
+    }
+
+    fun setLoading(loading: Boolean) {
+        isLoading = loading
+        updateRightImageState()
+    }
+
+    fun detachTextWatcher() {
         textWatcher?.detach()
     }
 }

@@ -26,7 +26,8 @@
         android:layout_height="48dp"
         android:background="@color/an_primary"
         app:cnb_menuResource="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:cnb_animationDuration="175"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/loading_layout"

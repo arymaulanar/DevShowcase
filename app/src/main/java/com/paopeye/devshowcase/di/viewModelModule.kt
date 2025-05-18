@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { NewsViewModel(get()) }
     viewModel { NewsDetailViewModel() }
-    viewModel { WeatherViewModel(get()) }
+    viewModel { WeatherViewModel(get(), get()) }
 }

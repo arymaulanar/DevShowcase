@@ -72,6 +72,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
         binding.newsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = newsAdapter
+            setItemViewCacheSize(10)
         }
         newsAdapter.setOnClickListener {
             replaceFragment(NewsDetailFragment.newInstance(it))
