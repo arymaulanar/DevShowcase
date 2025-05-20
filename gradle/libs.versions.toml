@@ -29,6 +29,7 @@ constraintlayout = "2.1.4"
 chipNavigationBar = "1.4.0"
 glide = "4.16.0"
 gms = "21.0.1"
+paletteKtx = "1.0.0"
 
 [libraries]
 android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -56,6 +57,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 navbar-chip = { module = "com.github.ismaeldivita:chip-navigation-bar", version.ref = "chipNavigationBar" }
 glide = { group = "com.github.bumptech.glide",name="glide", version.ref = "glide" }
 google-location = { group = "com.google.android.gms",name="play-services-location", version.ref = "gms" }
+androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

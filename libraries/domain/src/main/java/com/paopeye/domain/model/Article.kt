@@ -17,6 +17,8 @@ data class Article(
     val language: String = emptyString(),
     val images: List<String> = emptyList()
 ) : Parcelable {
+    fun isDirectWebView() = images.isEmpty() || title.isEmpty() || summary.isEmpty()
+
     fun getSourceDomain(): String {
         return getDomainName(source)
     }
@@ -25,7 +27,7 @@ data class Article(
         return DateParser.convertDateFormat(
             publishDate,
             DateFormat.ISO8601_1,
-            DateFormat.FULL_FORMAT_DOT
+            DateFormat.DATE
         )
     }
 }

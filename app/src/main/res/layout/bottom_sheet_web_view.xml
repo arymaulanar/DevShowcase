@@ -8,10 +8,17 @@
     <View
         android:id="@+id/divider_view"
         android:layout_width="@dimen/spacing_extra_large"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/white"
-        android:padding="@dimen/spacing_small"/>
+        android:padding="@dimen/spacing_small" />
+
+    <ProgressBar
+        android:id="@+id/loading_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/white" />
 
     <com.paopeye.devshowcase.component.web_view.CustomWebView
         android:id="@+id/web_view"

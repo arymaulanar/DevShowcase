@@ -1,8 +1,7 @@
 package com.paopeye.devshowcase
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.activity.addCallback
@@ -95,6 +94,21 @@ class MainActivity : AppCompatActivity(), ToolbarListener {
         )
     }
 
+    fun replaceFragmentWithSharedElement(
+        fragment: Fragment,
+        sharedElement: View?,
+        sharedElementName: String?
+    ) {
+        binding.bottomNav.visibility = GONE
+        FragmentUtils.replaceFragment(
+            fragmentManager = supportFragmentManager,
+            fragment = fragment,
+            frameId = R.id.fragment_container,
+            sharedElement = sharedElement,
+            sharedElementName = sharedElementName
+        )
+    }
+
     fun showFragment(fragment: Fragment) {
         FragmentUtils.addFragment(
             fragmentManager = supportFragmentManager,
@@ -105,11 +119,6 @@ class MainActivity : AppCompatActivity(), ToolbarListener {
     }
 
     private fun setupNavigationBar() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
         binding.bottomNav.setOnItemSelectedListener { id ->
             when (id) {
                 R.id.menu_news_item -> loadFragment(newsFragment, NewsFragment::class.java.name)
@@ -127,18 +136,16 @@ class MainActivity : AppCompatActivity(), ToolbarListener {
     }
 
     private fun loadFragment(fragment: Fragment, tag: String) = with(binding) {
-        Handler(Looper.getMainLooper()).postDelayed({
-            bottomNav.isClickable = false
-            val transaction = supportFragmentManager.beginTransaction()
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-            val nextFragment = supportFragmentManager.findFragmentByTag(tag)
-            currentFragment?.let { transaction.detach(it) }
-            nextFragment?.let { transaction.attach(it) }
-            if (nextFragment == null) transaction.add(R.id.fragment_container, fragment, tag)
-            transaction.setReorderingAllowed(true)
-            transaction.commit()
-            bottomNav.isClickable = true
-        }, 250)
+        bottomNav.isClickable = false
+        val transaction = supportFragmentManager.beginTransaction()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        val nextFragment = supportFragmentManager.findFragmentByTag(tag)
+        currentFragment?.let { transaction.detach(it) }
+        nextFragment?.let { transaction.attach(it) }
+        if (nextFragment == null) transaction.add(R.id.fragment_container, fragment, tag)
+        transaction.setReorderingAllowed(true)
+        transaction.commit()
+        bottomNav.isClickable = true
     }
 
     private fun showInitialFragment() {
@@ -147,6 +154,15 @@ class MainActivity : AppCompatActivity(), ToolbarListener {
         }
     }
 
+    fun setActivityInset(isFullScreen: Boolean) {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            var topPadding = systemBars.top
+            if (isFullScreen) topPadding = emptyInt()
+            v.setPadding(systemBars.left, topPadding, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
 }
 
 interface ToolbarListener {

@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.navbar.chip)
     implementation(libs.glide)
     implementation(libs.google.location)
+    implementation(libs.androidx.palette.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

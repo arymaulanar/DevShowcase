@@ -12,21 +12,21 @@
         android:layout_height="wrap_content"
         android:textColor="@color/an_text_secondary"
         android:textSize="@dimen/text_medium"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="www.globenewswire.com"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="www.globenewswire.com" />
 
     <TextView
         android:id="@+id/title_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:lines="3"
         android:ellipsize="end"
-        android:textSize="@dimen/text_title"
+        android:lines="3"
         android:textColor="@color/an_text_primary"
+        android:textSize="@dimen/text_title"
+        app:layout_constraintEnd_toStartOf="@id/news_image_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/author_text"
-        app:layout_constraintEnd_toStartOf="@id/news_image"
         tools:text="Mueller Water Products" />
 
     <TextView
@@ -35,17 +35,28 @@
         android:layout_height="wrap_content"
         android:textColor="@color/an_text_secondary"
         android:textSize="@dimen/text_small"
-        app:layout_constraintTop_toBottomOf="@id/title_text"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="05 Juli 2025"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_text"
+        tools:text="05 Juli 2025" />
 
-    <ImageView
-        android:id="@+id/news_image"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/news_image_card"
         android:layout_width="104dp"
         android:layout_height="104dp"
-        android:visibility="gone"
+        android:backgroundTint="@color/an_primary_variant"
+        app:cardCornerRadius="@dimen/corner_radius_large"
+        app:cardElevation="@dimen/spacing_none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/news_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="visible" />
+
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

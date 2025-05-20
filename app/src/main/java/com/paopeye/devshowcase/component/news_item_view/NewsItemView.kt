@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import com.paopeye.devshowcase.databinding.NewsItemViewBinding
 import com.paopeye.devshowcase.util.loadWithUrlFallback
 import com.paopeye.domain.model.Article
@@ -41,5 +42,6 @@ class NewsItemView @JvmOverloads constructor(
 
     fun setImage(imageUrls: List<String>) {
         binding.newsImage.loadWithUrlFallback(context, imageUrls)
+        binding.newsImageCard.isVisible = imageUrls.isNotEmpty()
     }
 }

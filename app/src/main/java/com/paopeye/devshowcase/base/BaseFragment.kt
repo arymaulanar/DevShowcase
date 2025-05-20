@@ -1,18 +1,19 @@
 package com.paopeye.devshowcase.base
 
+import android.animation.ArgbEvaluator
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.paopeye.devshowcase.MainActivity
+import com.paopeye.devshowcase.R
 import com.paopeye.devshowcase.ToolbarListener
-import com.paopeye.kit.extension.emptyLong
 import com.paopeye.kit.extension.emptyString
-import java.util.concurrent.TimeUnit
 
 abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     abstract fun isUseToolbar(): Boolean
@@ -20,6 +21,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     abstract fun setupView()
     abstract fun subscribeState()
     abstract fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): VB
+    open fun isFullScreen(): Boolean = false
     open fun toolbarTitle(): String = emptyString()
     open fun toolbarLeftClickListener(): (() -> Unit) = {
         requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -61,6 +63,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        (activity as MainActivity).setActivityInset(isFullScreen())
         toolbarListener.setTitleToolbar(toolbarTitle())
         toolbarListener.setVisibilityToolbar(isUseToolbar())
         toolbarListener.setVisibilityLeftImageButton(isUseLeftImageToolbar())
@@ -73,6 +76,18 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         (activity as MainActivity).replaceFragment(fragment)
     }
 
+    protected fun replaceFragmentWithSharedElement(
+        fragment: Fragment,
+        sharedElement: View,
+        sharedElementName: String
+    ) {
+        (activity as MainActivity).replaceFragmentWithSharedElement(
+            fragment,
+            sharedElement,
+            sharedElementName
+        )
+    }
+
     protected fun updateToolbar(
         title: String,
         isLeftImageVisible: Boolean,
@@ -83,6 +98,19 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         toolbarListener.setVisibilityLeftImageButton(isLeftImageVisible)
         toolbarListener.setBackgroundStatusBar(statusBarBackgroundColor)
         toolbarListener.setBackgroundToolbar(toolbarBackgroundColor)
+    }
+
+    protected fun updateToolbarStyling(
+        totalScrollY: Int,
+        maxScroll: Int,
+        titleText: String
+    ) {
+        val scrollRatio = (totalScrollY.toFloat() / maxScroll).coerceIn(0f, 1f)
+        val startColor = ContextCompat.getColor(requireContext(), R.color.an_primary_variant)
+        val endColor = Color.TRANSPARENT
+        val toolbarColor = ArgbEvaluator().evaluate(1 - scrollRatio, startColor, endColor) as Int
+        val title = if (scrollRatio == 1f) titleText else emptyString()
+        updateToolbar(title, false, toolbarColor, toolbarColor)
     }
 
     protected fun showLoading() {
