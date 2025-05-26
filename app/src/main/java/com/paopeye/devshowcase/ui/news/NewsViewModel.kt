@@ -81,6 +81,7 @@ class NewsViewModel(
             return
         }
         if (isVisible) {
+            Log.d("TAG", "showLoading: $isVisible")
             setState(State.ShowLoading)
             return
         }

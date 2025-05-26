@@ -135,17 +135,14 @@ class MainActivity : AppCompatActivity(), ToolbarListener {
         }
     }
 
-    private fun loadFragment(fragment: Fragment, tag: String) = with(binding) {
-        bottomNav.isClickable = false
+    private fun loadFragment(fragment: Fragment, tag: String): Int {
         val transaction = supportFragmentManager.beginTransaction()
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         val nextFragment = supportFragmentManager.findFragmentByTag(tag)
         currentFragment?.let { transaction.detach(it) }
         nextFragment?.let { transaction.attach(it) }
         if (nextFragment == null) transaction.add(R.id.fragment_container, fragment, tag)
-        transaction.setReorderingAllowed(true)
-        transaction.commit()
-        bottomNav.isClickable = true
+        return transaction.commit()
     }
 
     private fun showInitialFragment() {

@@ -1,11 +1,9 @@
 package com.paopeye.devshowcase.ui.weather
 
 import android.Manifest
-import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -21,15 +19,14 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.paopeye.devshowcase.R
 import com.paopeye.devshowcase.base.BaseFragment
 import com.paopeye.devshowcase.databinding.FragmentWeatherBinding
+import com.paopeye.devshowcase.ui.weather_detail.WeatherDetailFragment
 import com.paopeye.devshowcase.util.LocationUtils.checkLocationEnabled
 import com.paopeye.devshowcase.util.LocationUtils.showLocationDisabledAlert
 import com.paopeye.devshowcase.util.subscribeSingleState
 import com.paopeye.domain.model.CityAutoComplete
 import com.paopeye.domain.model.Weather
-import com.paopeye.kit.extension.emptyString
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
@@ -59,12 +56,15 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
         binding.searchEdit.detachTextWatcher()
     }
 
+    override fun onResume() {
+        super.onResume()
+        showPermission()
+    }
+
     override fun setupView() {
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
-        showPermission()
         setupSearchBar()
-        setupScrollView()
         setupRecyclerView()
         setupFocusClearing()
         viewModel.onEvent(WeatherViewModel.Event.OnCreate)
@@ -78,9 +78,14 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
                 is WeatherViewModel.State.ShowWeathers -> showWeathers(it.weathers)
                 is WeatherViewModel.State.ShowLoadingSearchBar -> showLoadingSearchBar(it.isLoading)
                 is WeatherViewModel.State.ShowCityAutoCompletes -> showCityAutoCompletes(it.cities)
+                is WeatherViewModel.State.NavigateToDetail -> navigateToDetail(it.weathers)
                 WeatherViewModel.State.ShowEmptyWeathers -> showEmptyWeathers()
             }
         }
+    }
+
+    private fun navigateToDetail(weathers: List<Weather>) {
+        replaceFragment(WeatherDetailFragment.newInstance(weathers))
     }
 
     private fun showCityAutoCompletes(cities: List<CityAutoComplete>) {
@@ -105,7 +110,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
             return
         }
         val isLocationEnabled = checkLocationEnabled(requireContext())
-        if (!isLocationEnabled) return showLocationDisabledAlert(requireContext())
+        if (!isLocationEnabled) showLocationDisabledAlert(requireContext())
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -137,13 +142,13 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
             binding.emptyWeatherText.visibility = View.GONE
         }
         binding.searchEdit.setOnClickAutoComplete {
-
+            viewModel.onEvent(WeatherViewModel.Event.OnSelectedAutoComplete(it))
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupFocusClearing() {
-        val root = binding.contentLayout // or use binding.root if appropriate
+        val root = binding.contentLayout
         root.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 val focusedView = requireActivity().currentFocus
@@ -156,28 +161,6 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
             }
             false
         }
-    }
-
-    private fun setupScrollView() {
-        binding.nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-            updateToolbarStyling(scrollY)
-        }
-    }
-
-    private fun updateToolbarStyling(scrollY: Int) {
-        val maxScroll = binding.weatherTitleText.height
-        val scrollRatio = (scrollY.toFloat() / maxScroll).coerceIn(0f, 1f)
-        val startColor = ContextCompat.getColor(requireContext(), R.color.an_primary_variant)
-        val endColor = Color.TRANSPARENT
-        var title = emptyString()
-
-        val toolbarColor = ArgbEvaluator().evaluate(
-            1 - scrollRatio,
-            startColor,
-            endColor
-        ) as Int
-        if (scrollRatio == 1f) title = getString(R.string.menu_news)
-        updateToolbar(title, false, toolbarColor, toolbarColor)
     }
 
     private fun setupRecyclerView() {

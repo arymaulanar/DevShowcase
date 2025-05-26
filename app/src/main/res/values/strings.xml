@@ -12,4 +12,13 @@
     <string name="temp">%1$s°</string>
     <string name="minTemp">Min: %1$s°</string>
     <string name="maxTemp">Max: %1$s°</string>
+    <string name="now">Now</string>
+    <string name="forecast_title">Forecast in 3-hour intervals</string>
+    <string name="degree">°</string>
+    <string name="percent">%</string>
+    <string name="humidity">Humidity</string>
+    <string name="feels_like">Feels Like</string>
+    <string name="temperature_index">Temperature Index</string>
+    <string name="wind">Wind</string>
+    <string name="add">Add</string>
 </resources>

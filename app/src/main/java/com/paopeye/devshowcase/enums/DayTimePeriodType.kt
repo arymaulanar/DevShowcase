@@ -9,7 +9,8 @@ enum class DayTimePeriodType {
     UNSPECIFIED {
         override fun getBackgroundColor(): GradientDrawable {
             val colors = intArrayOf(
-                Color.parseColor("#FFFFFF")
+                Color.parseColor("#1C1C1E"),
+                Color.parseColor("#1C1C1E")
             )
 
             val gradient = GradientDrawable(

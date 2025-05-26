@@ -7,4 +7,5 @@ object DateFormat {
     const val FULL_FORMAT_DOT = "dd MMMM yyyy • HH:mm"
     const val DATE = "dd MMMM yyyy"
     const val TIME = "HH:mm"
+    const val HOUR = "HH"
 }

@@ -1,12 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/custom_toolbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:background="@drawable/bg_circular_back_button"
+            android:contentDescription="@string/back_button"
+            android:elevation="4dp"
+            android:padding="@dimen/spacing_small"
+            android:scaleType="center"
+            android:src="@drawable/ic_back_arrow_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_text_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:padding="@dimen/spacing_small"
+            android:text="@string/add"
+            android:textColor="@color/an_secondary"
+            android:textSize="@dimen/text_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/title_text"
+        android:id="@+id/city_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:textAlignment="center"
+        android:textSize="@dimen/text_extra_extra_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/custom_toolbar_view"
+        tools:text="Bekasi" />
+
+    <TextView
+        android:id="@+id/temperature_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/text_temperature"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/city_text"
+        tools:text="50" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/degree"
+        android:textSize="@dimen/text_temperature"
+        app:layout_constraintBottom_toBottomOf="@id/temperature_text"
+        app:layout_constraintStart_toEndOf="@id/temperature_text"
+        app:layout_constraintTop_toTopOf="@id/temperature_text" />
+
+    <TextView
+        android:id="@+id/weather_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textAlignment="center"
+        android:textSize="@dimen/text_extra_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/temperature_text"
+        tools:text="Rain" />
+
+    <com.paopeye.devshowcase.component.forecast_view.ForecastView
+        android:id="@+id/forecast_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/weather_text" />
+
+    <com.paopeye.devshowcase.component.wind_forecast_view.WindForecastView
+        android:id="@+id/wind_forecast_view"
+        android:layout_width="@dimen/spacing_none"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/forecast_view" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/humidity_layout"
+        android:layout_width="@dimen/spacing_none"
+        android:layout_height="@dimen/weather_card_height"
+        android:layout_margin="@dimen/spacing_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/forecast_view">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spacing_none"
+            android:background="@drawable/bg_transparent_card"
+            android:padding="@dimen/spacing_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/humidity_title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/humidity"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/humidity_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_extra_extra_large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/humidity_title_text"
+                tools:text="50%" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/feel_like_layout"
+        android:layout_width="@dimen/spacing_none"
+        android:layout_height="@dimen/weather_card_height"
+        android:layout_margin="@dimen/spacing_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/barrier">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spacing_none"
+            android:background="@drawable/bg_transparent_card"
+            android:padding="@dimen/spacing_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/feel_like_title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/feels_like"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/feel_like_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_extra_extra_large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/feel_like_title_text"
+                tools:text="50°" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/min_max_temp_layout"
+        android:layout_width="@dimen/spacing_none"
+        android:layout_height="@dimen/weather_card_height"
+        android:layout_margin="@dimen/spacing_medium"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spacing_none"
+            android:background="@drawable/bg_transparent_card"
+            android:padding="@dimen/spacing_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/min_max_temp_title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/temperature_index"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.paopeye.devshowcase.component.temperature_index_view.TemperatureIndexView
+                android:id="@+id/min_max_temp_view"
+                android:layout_width="@dimen/spacing_none"
+                android:layout_height="wrap_content"
+                app:currentTemp="25"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/min_max_temp_title_text"
+                app:maxTemp="40"
+                app:minTemp="10" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="wind_forecast_view,humidity_layout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

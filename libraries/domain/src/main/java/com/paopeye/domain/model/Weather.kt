@@ -36,4 +36,13 @@ data class Weather(
             DateFormat.TIME
         )
     }
+    fun getHour(): String {
+        val adjustedTimestamp = timestamp * 1000
+        val dateString = Date(adjustedTimestamp).toString()
+        return DateParser.convertDateFormatByTimezone(
+            dateString,
+            DateFormat.DEFAULT_FORMAT,
+            DateFormat.HOUR
+        )
+    }
 }

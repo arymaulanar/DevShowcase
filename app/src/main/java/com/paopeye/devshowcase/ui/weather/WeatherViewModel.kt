@@ -10,6 +10,7 @@ import com.paopeye.domain.model.CityAutoComplete
 import com.paopeye.domain.model.Weather
 import com.paopeye.domain.usecase.photon.GetCityAutoCompletesUseCase
 import com.paopeye.domain.usecase.weather.GetCachedWeathersUseCase
+import com.paopeye.domain.usecase.weather.GetWeatherForecastsUseCase
 import com.paopeye.kit.extension.emptyString
 import com.paopeye.kit.extension.orEmpty
 import com.paopeye.kit.util.date.DateParser
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class WeatherViewModel(
     private val getWeathersCachedWeathersUseCase: GetCachedWeathersUseCase,
+    private val getWeatherForecastsUseCase: GetWeatherForecastsUseCase,
     private val getCityAutoCompletesUseCase: GetCityAutoCompletesUseCase
 ) : BaseViewModel() {
     private val _state = MutableLiveData<StateWrapper<State>>()
@@ -34,6 +36,7 @@ class WeatherViewModel(
         data class ShowWeathers(val weathers: List<Weather>) : State()
         data class ShowCityAutoCompletes(val cities: List<CityAutoComplete>) : State()
         data class ShowLoadingSearchBar(val isLoading: Boolean) : State()
+        data class NavigateToDetail(val weathers: List<Weather>) : State()
         data object ShowEmptyWeathers : State()
         data object ShowLoading : State()
         data object HideLoading : State()
@@ -100,8 +103,14 @@ class WeatherViewModel(
         currentLocation = location
     }
 
-    private fun onSelectedAutoComplete(city: CityAutoComplete) {
-
+    private fun onSelectedAutoComplete(city: CityAutoComplete) = launch {
+        val request = Weather(latitude = city.latitude, longitude = city.longitude)
+        setState(State.ShowLoading)
+        val result = getWeatherForecastsUseCase.invoke(request)
+        setState(State.HideLoading)
+        if (result is DataState.ERROR) return@launch
+        val weathers = result.data?.weathers?.map { it.copy(cityName = city.city) }.orEmpty()
+        setState(State.NavigateToDetail(weathers))
     }
 
     private fun setState(state: State) {

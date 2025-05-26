@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TemperatureGradientView">
+        <attr name="minTemp" format="float" />
+        <attr name="maxTemp" format="float" />
+        <attr name="currentTemp" format="float" />
+    </declare-styleable>
+</resources>
