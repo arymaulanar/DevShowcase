@@ -2,7 +2,7 @@
 
 ![App Logo](app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp)
 
-A modern Android application that provides news, weather, and profile management features.
+A modern Android application that provides news, weather features.
 
 ## Features
 
@@ -15,11 +15,6 @@ A modern Android application that provides news, weather, and profile management
 
 ## Screenshots
 
-### News Screen
-![News Feature](documentation/news.gif)
-
-### Weather Screen
-![Weather Feature](documentation/weather.gif)
-
-### Profile Screen
-![Profile Feature](documentation/profile.gif)
+| News Page | Weather Page | Profile Page | 
+|--------------|-----------------|------------------| 
+| ![News](documentation/news.gif) | ![Weather](documentation/weather.gif) | ![Profile](documentation/profile.gif) |
