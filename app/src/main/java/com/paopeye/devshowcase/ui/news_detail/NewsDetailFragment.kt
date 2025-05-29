@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import com.paopeye.devshowcase.base.BaseFragment
 import com.paopeye.devshowcase.component.bottom_sheet_web_view.BottomSheetWebView
 import com.paopeye.devshowcase.databinding.FragmentNewsDetailBinding
-import com.paopeye.devshowcase.util.applyGradientToTitle
 import com.paopeye.devshowcase.util.loadImageWithUrl
 import com.paopeye.devshowcase.util.setFullScreenMarginTop
 import com.paopeye.devshowcase.util.subscribeSingleState

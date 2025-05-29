@@ -1,9 +1,13 @@
 package com.paopeye.devshowcase.util
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.LinearGradient
+import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
@@ -17,7 +21,9 @@ import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -188,7 +194,8 @@ fun applyGradientToTitle(titleView: TextView, imageView: ImageView) {
 
     titleView.paint.shader = gradient
     titleView.setTextColor(Color.WHITE)
-    imageView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+    imageView.viewTreeObserver.addOnGlobalLayoutListener(object :
+        ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
             imageView.viewTreeObserver.removeOnGlobalLayoutListener(this)
             adjustTitleForImage(titleView, imageView)
@@ -199,7 +206,8 @@ fun applyGradientToTitle(titleView: TextView, imageView: ImageView) {
 private fun adjustTitleForImage(titleView: TextView, imageView: ImageView) {
     val bitmap = (imageView.drawable as? BitmapDrawable)?.bitmap
     if (bitmap != null) {
-        val bottomColor = getDominantColorFromArea(bitmap,
+        val bottomColor = getDominantColorFromArea(
+            bitmap,
             Rect(emptyInt(), bitmap.height - 20, bitmap.width, bitmap.height)
         )
 
@@ -221,8 +229,10 @@ private fun adjustTitleForImage(titleView: TextView, imageView: ImageView) {
 }
 
 private fun getDominantColorFromArea(bitmap: Bitmap, area: Rect): Int {
-    val cropped = Bitmap.createBitmap(bitmap, area.left, area.top,
-        area.width(), area.height())
+    val cropped = Bitmap.createBitmap(
+        bitmap, area.left, area.top,
+        area.width(), area.height()
+    )
     return Palette.from(cropped).generate().getDominantColor(Color.BLACK)
 }
 
@@ -234,3 +244,55 @@ private fun isColorDark(color: Int): Boolean {
     val luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
     return luminance < darknessThreshold
 }
+
+fun View.isVisibleWithAnim(
+    isVisible: Boolean,
+    duration: Long = 100,
+    endActionListener: () -> Unit = {}
+) {
+    if (!isVisible) {
+        animate()
+            .alpha(0f)
+            .setDuration(duration)
+            .withEndAction {
+                visibility = View.GONE
+                endActionListener.invoke()
+            }
+            .start()
+        return
+    }
+    visibility = View.VISIBLE
+    alpha = 0f
+    animate()
+        .alpha(1f)
+        .setDuration(duration)
+        .start()
+}
+
+fun View.animateWidth(
+    startWidth: Int,
+    endWidth: Int,
+    duration: Long = 250,
+    onEnd: (() -> Unit)? = null
+) {
+    val animator = ValueAnimator.ofInt(startWidth, endWidth).apply {
+        this.duration = duration
+        interpolator = FastOutSlowInInterpolator()
+        addUpdateListener { animation ->
+            layoutParams = layoutParams.apply {
+                width = animation.animatedValue as Int
+            }
+        }
+        onEnd?.let { callback ->
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    callback()
+                }
+            })
+        }
+    }
+    animator.start()
+}
+
+fun ImageView.setDrawableTintColor(@ColorInt color: Int) =
+    setColorFilter(color, PorterDuff.Mode.SRC_IN)

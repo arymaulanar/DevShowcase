@@ -16,9 +16,10 @@
     <dimen name="weather_card_height">120dp</dimen>
     <dimen name="weather_card_half_height">48dp</dimen>
 
-    <!-- Button -->
+    <!-- Height -->
     <dimen name="button_height">48dp</dimen>
     <dimen name="searchbar_height">48dp</dimen>
+    <dimen name="text_multiline_height">120dp</dimen>
 
     <!-- Toolbar dimensions -->
     <dimen name="toolbar_height">56dp</dimen>

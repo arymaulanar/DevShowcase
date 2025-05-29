@@ -35,6 +35,7 @@ class WeathersItemView @JvmOverloads constructor(
     fun setCity(city: String) {
         binding.cityText.text = city
     }
+
     fun setTime(time: String) {
         binding.timeText.text = time
     }
@@ -57,6 +58,6 @@ class WeathersItemView @JvmOverloads constructor(
 
     fun setBackground() {
         val currentTimeType = DayTimePeriodType.getType()
-        binding.cardView.setBackgroundDrawable(currentTimeType.getBackgroundColor())
+        binding.cardContentLayout.background = currentTimeType.getBackgroundColor()
     }
 }

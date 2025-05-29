@@ -3,6 +3,7 @@ package com.paopeye.devshowcase.ui.weather_detail
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.bundle.bundleOf
+import androidx.core.view.isVisible
 import com.paopeye.devshowcase.R
 import com.paopeye.devshowcase.base.BaseFragment
 import com.paopeye.devshowcase.databinding.FragmentWeatherDetailBinding
@@ -11,6 +12,7 @@ import com.paopeye.devshowcase.util.setFullScreenMarginTop
 import com.paopeye.devshowcase.util.subscribeSingleState
 import com.paopeye.domain.model.Weather
 import com.paopeye.kit.extension.orEmpty
+import com.paopeye.kit.extension.orFalse
 import com.paopeye.kit.extension.parcelableArrayList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,11 +31,16 @@ class WeatherDetailFragment : BaseFragment<FragmentWeatherDetailBinding>() {
     private val weathers by lazy {
         arguments?.parcelableArrayList(WEATHERS, Weather::class.java).orEmpty()
     }
+    private val isNew by lazy {
+        arguments?.getBoolean(IS_NEW).orFalse()
+    }
 
     override fun setupView() {
+        binding.addTextButton.isVisible = isNew
         binding.customToolbarView.setFullScreenMarginTop()
-        binding.backButton.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+        binding.backButton.setOnClickListener { navigateBackToList() }
+        binding.addTextButton.setOnClickListener {
+            viewModel.onEvent(WeatherDetailViewModel.Event.OnAddCurrentWeathers)
         }
         viewModel.onEvent(WeatherDetailViewModel.Event.OnCreate(weathers))
     }
@@ -43,6 +50,7 @@ class WeatherDetailFragment : BaseFragment<FragmentWeatherDetailBinding>() {
             when (it) {
                 WeatherDetailViewModel.State.HideLoading -> hideLoading()
                 WeatherDetailViewModel.State.ShowLoading -> showLoading()
+                WeatherDetailViewModel.State.NavigateBackToList -> navigateBackToList()
                 is WeatherDetailViewModel.State.ShowBackground -> showBackground(it.dayTimePeriodType)
                 is WeatherDetailViewModel.State.ShowCity -> showCity(it.city)
                 is WeatherDetailViewModel.State.ShowTemperature -> showTemperature(it.temperature)
@@ -54,6 +62,10 @@ class WeatherDetailFragment : BaseFragment<FragmentWeatherDetailBinding>() {
                 is WeatherDetailViewModel.State.ShowTemperatureIndex -> showTemperatureIndex(it.weather)
             }
         }
+    }
+
+    private fun navigateBackToList() {
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
     private fun showTemperatureIndex(weather: Weather) {
@@ -100,12 +112,15 @@ class WeatherDetailFragment : BaseFragment<FragmentWeatherDetailBinding>() {
 
     companion object {
         const val WEATHERS = ".weathers"
+        const val IS_NEW = ".isNew"
         fun newInstance(
             weathers: List<Weather>,
+            isNew: Boolean = false,
         ): WeatherDetailFragment {
             val fragment = WeatherDetailFragment()
             fragment.arguments = bundleOf(
-                WEATHERS to weathers
+                WEATHERS to weathers,
+                IS_NEW to isNew
             )
             return fragment
         }

@@ -34,6 +34,7 @@
             android:layout_marginEnd="@dimen/spacing_medium"
             android:padding="@dimen/spacing_small"
             android:text="@string/add"
+            android:visibility="gone"
             android:textColor="@color/an_secondary"
             android:textSize="@dimen/text_medium"
             app:layout_constraintBottom_toBottomOf="parent"

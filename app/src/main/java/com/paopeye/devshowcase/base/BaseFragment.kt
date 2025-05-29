@@ -2,7 +2,9 @@ package com.paopeye.devshowcase.base
 
 import android.animation.ArgbEvaluator
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -96,8 +98,12 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     ) {
         toolbarListener.setTitleToolbar(title)
         toolbarListener.setVisibilityLeftImageButton(isLeftImageVisible)
-        toolbarListener.setBackgroundStatusBar(statusBarBackgroundColor)
+        updateBackgroundStatusBarColor(statusBarBackgroundColor)
         toolbarListener.setBackgroundToolbar(toolbarBackgroundColor)
+    }
+
+    protected fun updateBackgroundStatusBarColor(statusBarBackgroundColor: Int?) {
+        toolbarListener.setBackgroundStatusBar(statusBarBackgroundColor)
     }
 
     protected fun updateToolbarStyling(
@@ -119,5 +125,10 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     protected fun hideLoading() {
         (activity as MainActivity).loadingVisibility(false)
+    }
+
+    protected fun navigateToExternalBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(browserIntent)
     }
 }

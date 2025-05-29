@@ -13,7 +13,6 @@ import com.paopeye.domain.usecase.weather.GetCachedWeathersUseCase
 import com.paopeye.domain.usecase.weather.GetWeatherForecastsUseCase
 import com.paopeye.kit.extension.emptyString
 import com.paopeye.kit.extension.orEmpty
-import com.paopeye.kit.util.date.DateParser
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(
@@ -30,13 +29,14 @@ class WeatherViewModel(
         data class OnGetLocation(val location: Location) : Event()
         data class OnQuerySearchBar(val query: String) : Event()
         data class OnSelectedAutoComplete(val city: CityAutoComplete) : Event()
+        data class OnSavedWeatherClicked(val weather: Weather) : Event()
     }
 
     sealed class State {
         data class ShowWeathers(val weathers: List<Weather>) : State()
         data class ShowCityAutoCompletes(val cities: List<CityAutoComplete>) : State()
         data class ShowLoadingSearchBar(val isLoading: Boolean) : State()
-        data class NavigateToDetail(val weathers: List<Weather>) : State()
+        data class NavigateToDetail(val weathers: List<Weather>, val isNew: Boolean) : State()
         data object ShowEmptyWeathers : State()
         data object ShowLoading : State()
         data object HideLoading : State()
@@ -50,6 +50,7 @@ class WeatherViewModel(
             is Event.OnQuerySearchBar -> onQuerySearchBar(event.query)
             is Event.OnGetLocation -> onGetLocation(event.location)
             is Event.OnSelectedAutoComplete -> onSelectedAutoComplete(event.city)
+            is Event.OnSavedWeatherClicked -> onSavedWeatherClicked(event.weather)
         }
     }
 
@@ -83,19 +84,17 @@ class WeatherViewModel(
         setState(State.ShowCityAutoCompletes(filteredCities))
     }
 
-    private fun onGetSavedWeathers() {
+    private fun onSavedWeatherClicked(weather: Weather) {
+        getWeatherForecast(weather)
+    }
+
+    private fun onGetSavedWeathers() = launch {
         setState(State.ShowLoading)
-        val currentTimestamp = DateParser.getTimestampInSecond()
         val savedWeathers = getWeathersCachedWeathersUseCase.invoke()
-        val weathersGroupBy = savedWeathers.weathers.groupBy { it.cityName }.values
-        val weathersFiltered = weathersGroupBy.mapNotNull { value ->
-            val filtered = value.filter { it.timestamp <= currentTimestamp }
-            if (filtered.isEmpty()) return@mapNotNull null
-            filtered.maxByOrNull { it.timestamp }
-        }
+        val weathers = savedWeathers.weathers.distinctBy { it.cityName }
         setState(State.HideLoading)
-        if (weathersFiltered.isEmpty()) return setState(State.ShowEmptyWeathers)
-        setState(State.ShowWeathers(weathersFiltered))
+        if (weathers.isEmpty()) return@launch setState(State.ShowEmptyWeathers)
+        setState(State.ShowWeathers(weathers))
     }
 
     private fun onGetLocation(location: Location) {
@@ -103,14 +102,22 @@ class WeatherViewModel(
         currentLocation = location
     }
 
-    private fun onSelectedAutoComplete(city: CityAutoComplete) = launch {
-        val request = Weather(latitude = city.latitude, longitude = city.longitude)
+    private fun onSelectedAutoComplete(city: CityAutoComplete) {
+        val request = Weather(
+            latitude = city.latitude,
+            longitude = city.longitude,
+            cityName = city.city
+        )
+        getWeatherForecast(request, true)
+    }
+
+    private fun getWeatherForecast(request: Weather, isNew: Boolean = false) = launch {
         setState(State.ShowLoading)
         val result = getWeatherForecastsUseCase.invoke(request)
         setState(State.HideLoading)
         if (result is DataState.ERROR) return@launch
-        val weathers = result.data?.weathers?.map { it.copy(cityName = city.city) }.orEmpty()
-        setState(State.NavigateToDetail(weathers))
+        val weathers = result.data?.weathers?.map { it.copy(cityName = request.cityName) }.orEmpty()
+        setState(State.NavigateToDetail(weathers, isNew))
     }
 
     private fun setState(state: State) {

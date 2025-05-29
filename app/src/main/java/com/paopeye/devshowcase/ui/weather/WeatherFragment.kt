@@ -59,6 +59,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
     override fun onResume() {
         super.onResume()
         showPermission()
+        viewModel.onEvent(WeatherViewModel.Event.OnCreate)
     }
 
     override fun setupView() {
@@ -78,14 +79,18 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
                 is WeatherViewModel.State.ShowWeathers -> showWeathers(it.weathers)
                 is WeatherViewModel.State.ShowLoadingSearchBar -> showLoadingSearchBar(it.isLoading)
                 is WeatherViewModel.State.ShowCityAutoCompletes -> showCityAutoCompletes(it.cities)
-                is WeatherViewModel.State.NavigateToDetail -> navigateToDetail(it.weathers)
+                is WeatherViewModel.State.NavigateToDetail -> navigateToDetail(
+                    it.weathers,
+                    it.isNew
+                )
+
                 WeatherViewModel.State.ShowEmptyWeathers -> showEmptyWeathers()
             }
         }
     }
 
-    private fun navigateToDetail(weathers: List<Weather>) {
-        replaceFragment(WeatherDetailFragment.newInstance(weathers))
+    private fun navigateToDetail(weathers: List<Weather>, isNew: Boolean) {
+        replaceFragment(WeatherDetailFragment.newInstance(weathers, isNew))
     }
 
     private fun showCityAutoCompletes(cities: List<CityAutoComplete>) {
@@ -169,7 +174,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>() {
             adapter = weathersAdapter
         }
         weathersAdapter.setOnClickListener {
-//            replaceFragment(NewsDetailFragment.newInstance(it))
+            viewModel.onEvent(WeatherViewModel.Event.OnSavedWeatherClicked(it))
         }
     }
 

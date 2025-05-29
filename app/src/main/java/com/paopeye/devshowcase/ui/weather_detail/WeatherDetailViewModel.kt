@@ -6,15 +6,22 @@ import com.paopeye.devshowcase.base.BaseViewModel
 import com.paopeye.devshowcase.enums.DayTimePeriodType
 import com.paopeye.devshowcase.util.StateWrapper
 import com.paopeye.domain.model.Weather
+import com.paopeye.domain.model.Weathers
+import com.paopeye.domain.usecase.weather.SetCachedWeathersUseCase
 import com.paopeye.kit.util.date.DateParser
 import kotlinx.coroutines.launch
 
-class WeatherDetailViewModel : BaseViewModel() {
+class WeatherDetailViewModel(
+    private val setCachedWeathersUseCase: SetCachedWeathersUseCase
+) : BaseViewModel() {
     private val _state = MutableLiveData<StateWrapper<State>>()
     val state: LiveData<StateWrapper<State>> = _state
 
+    private var currentWeathers: Weathers = Weathers()
+
     sealed class Event {
         data class OnCreate(val weathers: List<Weather>) : Event()
+        data object OnAddCurrentWeathers : Event()
     }
 
     sealed class State {
@@ -27,6 +34,7 @@ class WeatherDetailViewModel : BaseViewModel() {
         data class ShowTemperatureIndex(val weather: Weather) : State()
         data class ShowFeelLike(val feelLike: Int) : State()
         data class ShowWind(val weather: Weather) : State()
+        data object NavigateBackToList : State()
         data object ShowLoading : State()
         data object HideLoading : State()
     }
@@ -34,6 +42,7 @@ class WeatherDetailViewModel : BaseViewModel() {
     fun onEvent(event: Event) {
         when (event) {
             is Event.OnCreate -> onCreate(event.weathers)
+            Event.OnAddCurrentWeathers -> onAddCurrentWeathers()
         }
     }
 
@@ -41,6 +50,7 @@ class WeatherDetailViewModel : BaseViewModel() {
         val getCurrentTime = DateParser.getTimestampInSecond()
         val filteredWeathers = filterWeathersByCurrentTime(weathers, getCurrentTime)
         val currentWeather = filteredWeathers.firstOrNull() ?: return@launch
+        currentWeathers = Weathers(weathers = filteredWeathers)
         setState(State.ShowBackground(DayTimePeriodType.getType(getCurrentTime)))
         setState(State.ShowCity(currentWeather.cityName))
         setState(State.ShowTemperature(currentWeather.currentTemp.toString()))
@@ -50,6 +60,11 @@ class WeatherDetailViewModel : BaseViewModel() {
         setState(State.ShowHumidity(currentWeather.humidity))
         setState(State.ShowTemperatureIndex(currentWeather))
         setState(State.ShowWind(currentWeather))
+    }
+
+    private fun onAddCurrentWeathers() = launch {
+        setCachedWeathersUseCase.invoke(currentWeathers)
+        setState(State.NavigateBackToList)
     }
 
     private fun filterWeathersByCurrentTime(
